@@ -1,0 +1,23 @@
+# API de Oykos. La base de datos vive en el repo oykos-db:
+# levántala primero (docker compose up -d en oykos-db), que crea la red oykos_net.
+services:
+  api:
+    build: .
+    container_name: oykos_api
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Dentro de la red de Docker la base se llama oykos_db y escucha en 5432.
+      DB_HOST: oykos_db
+      DB_PORT: 5432
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    networks:
+      - oykos_net
+
+networks:
+  oykos_net:
+    external: true
